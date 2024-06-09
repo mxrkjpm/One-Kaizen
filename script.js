@@ -146,49 +146,87 @@ const popuplinks = document.querySelectorAll(".popuplink")
 
     const renderMembers = (members) => {
         const memberListElement = document.querySelector(".memberList");
-        memberListElement.innerHTML = "";
 
-        members.forEach((item) => {
+        if(memberListElement) {
+            memberListElement.innerHTML = "";
 
-            const expired = isExpired(item.membership_duration);
+            members.forEach((item) => {
 
-            var remainingTime = calculateRemainingTime(item.membership_duration);
+                const expired = isExpired(item.membership_duration);
 
-console.log(`${item.name} `)
+                var remainingTime = calculateRemainingTime(item.membership_duration);
 
-            console.log('isExpired', expired, item.name)
-            const memberHtml = `
-                <div class="flex border-b border-[#ccc] pb-[15px] text-left mb-[10px]">
-                    <div class="w-full max-w-[25%]">${item.name}</div>
-                    <div class="w-full max-w-[25%]">${item.contact}</div>
-                    <div class="w-full max-w-[25%]">
-                        ${expired ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-</svg>
-
-
-
-` :  `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="green" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-</svg>`}
-                    </div>
-                    <div class="w-full max-w-[25%]">${expired ? "EXPIRED" : `${remainingTime.days} days ${remainingTime.minutes} minutes remaining`}</div>
+                console.log('isExpired', expired, item.name)
+                const memberHtml = `
+                    <div class="flex border-b border-[#ccc] pb-[15px] text-left mb-[10px]">
+                        <div class="w-full max-w-[25%]">${item.name}</div>
+                        <div class="w-full max-w-[25%]">${item.contact}</div>
+                        <div class="w-full max-w-[25%]">
+                            ${expired ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                            ` :  `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="green" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>`}
+                        </div>
+                <div class="w-full max-w-[25%]">${expired ? "EXPIRED" : `${remainingTime.days} days ${remainingTime.minutes} minutes remaining`}</div>
                 </div>`;
-            memberListElement.innerHTML += memberHtml;
-        });
+                memberListElement.innerHTML += memberHtml;
+            });
+        }
+        
     }; 
 
     renderMembers(members);
 
     const searchInput = document.getElementById("searchInput");
-    searchInput.addEventListener("input", () => {
-        const searchTerm = searchInput.value.trim().toLowerCase();
-        const filteredMembers = members.filter((member) => {
-            return (
-                member.name.toLowerCase().includes(searchTerm) ||
-                member.contact.includes(searchTerm) ||
-                member.membership_duration.toLowerCase().includes(searchTerm)
-            );
+
+    if(searchInput) {
+        searchInput.addEventListener("input", () => {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const filteredMembers = members.filter((member) => {
+                return (
+                    member.name.toLowerCase().includes(searchTerm) ||
+                    member.contact.includes(searchTerm) ||
+                    member.membership_duration.toLowerCase().includes(searchTerm)
+                );
+            });
+            renderMembers(filteredMembers);
         });
-        renderMembers(filteredMembers);
-    });
+    }
+   
+
+
+const header = document.querySelector('header');
+
+function getWindowScrollOffset() {
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+    // return {
+    //     top: scrollTop,
+    //     left: scrollLeft
+    // };
+
+    console.log('scrollTop', scrollTop)
+
+    if(scrollTop > 0) {
+        header.classList.add('scrolled');
+    }else {
+        header.classList.remove('scrolled');
+    }
+}
+
+// Initial log of scroll position
+var scrollOffset = getWindowScrollOffset();
+
+// window.onscroll = function() {
+//     var scrollOffset = getWindowScrollOffset();
+// };
+
+window.onload = () => {
+    getWindowScrollOffset(); 
+}
+window.onscroll = () => {
+    getWindowScrollOffset(); 
+}

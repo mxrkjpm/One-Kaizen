@@ -15,6 +15,13 @@ body {
 
 }
 
+body.about{
+    min-height: 100dvh;
+    background: #fff;
+    background-size: cover;
+    background-position: center;
+}  
+ 
 header {
     position: fixed;
     top: 0;
@@ -26,6 +33,19 @@ header {
     justify-content: space-between;
     align-items: center;
     z-index: 100;
+    transition: all ease .3s; 
+}
+.header.scrolled {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    transition: all ease .3s; 
+}
+.header .logo {
+    transition: all ease .3s; 
+}
+.header.scrolled .logo {
+    font-size: 30px; 
+    transition: all ease .3s; 
 }
 
 .logo {
@@ -165,4 +185,26 @@ input{
 }
 .close:after {
     transform: rotate(-45deg) translate(-50%, -50%);
+}
+
+.slider .slick-dots {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px; 
+}
+.slider .slick-dots .slick-active {
+    transform: scale(1.2); 
+    transition: all ease .3s; 
+}
+.slider .slick-dots button {
+    text-indent: -999999px;
+    width: 20px;
+    height: 20px; 
+    border-radius: 100%;
+    display: block; 
+    background-color: #ccc; 
 }

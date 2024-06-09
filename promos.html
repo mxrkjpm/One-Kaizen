@@ -15,7 +15,7 @@
         <nav class="navbar">
         <a href="#">Promos</a>
         <!-- <a href="#">Member List</a> -->
-        <div class="salespopup popuplink" data-target="#memberlistpopup">MemberList</div>
+        <div class="memberpopup popuplink" data-target="#memberlistpopup">MemberList</div>
         <div class="salespopup popuplink" data-target="#salespopup">Sales</div>
             
         <a href="#">Log Out</a>
@@ -61,39 +61,62 @@
         </div>
     </div>
 
+    <div class="popup" id="addPromo">
+        <div class="popup-content">
+            <a href="#" class="close" data-target="#addPromo"></a>
+            
+            <h2 class="text-xl font-semibold mb-4">Add New Promo</h2>
+        <form id="addPromoForm" class="space-y-4">
+            <div>
+                <label for="promo" class="block text-sm font-medium text-gray-700">Promo:</label>
+                <input type="text" id="promo" name="promo" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            
+            <div>
+                <label for="price" class="block text-sm font-medium text-gray-700">Price:</label>
+                <input type="text" id="price" name="price" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            
+            <div>
+                <label for="duration" class="block text-sm font-medium text-gray-700">Duration:</label>
+                <input type="text" id="duration" name="duration" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            
+            <div>
+                <button type="submit"
+                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Add Promo
+                </button>
+            </div>
+        </form>
+        </div>
+    </div>
+
     <div class="pt-[100px] px-[30px]">
         <div class="p-[50px] bg-[#fff] bg-opacity-70 backdrop-blur-lg max-w-[1140px] mx-auto">
             <div class="contact flex justify-end mb-[30px]">
-                <div>
-                    <a>
-                        Checkin
-                    </a>
-                </div>
-            </div>
+                <div class="popuplink bg-indigo-500 text-white py-[15px] px-[30px] rounded-[10px]" data-target="#addPromo">Add Promo</div>
+            </div> 
             <div class="flex text-left  py-[15px] mb-[15px] px-[15px]">
-                <div class="w-full max-w-[33.33%]">
+                <div class="w-full max-w-[25%]">
                     Promo
                 </div>
-                <div class="w-full max-w-[33.33%]">
+                <div class="w-full max-w-[25%]">
                     Price
                 </div>
-                <div class="w-full max-w-[33.33%]">
+                <div class="w-full max-w-[25%]">
                     Duration
+                </div>
+                <div class="w-full max-w-[25%]">
+                    Actions
                 </div>
             </div>
     
-            <div class="promot-list">
-                <div class="flex text-left  py-[15px] mb-[15px] px-[15px]">
-                    <div class="w-full max-w-[33.33%]">
-                        60% OFF
-                    </div>
-                    <div class="w-full max-w-[33.33%]">
-                        Sample Text
-                    </div>
-                    <div class="w-full max-w-[33.33%]">
-                        Hello
-                    </div>
-                </div>
+            <div class="promo-list">
+                
             </div>
         </div>
     </div>
@@ -103,9 +126,94 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="./script.js"></script>
 
+    <script>
+        const promos = [
+            
+        ]
+
+        
+        
+        const renderPromos = (promos) => {
+        const promoListElem = document.querySelector(".promo-list");
+        
+
+        if(promoListElem) {
+            promoListElem.innerHTML = "";
+
+            promos.forEach((item, index) => {
+
+                const expired = isExpired(item.duration);
+
+                var remainingTime = calculateRemainingTime(item.duration);
+
+                const promoHtml = `
+                    <div class="flex border-b border-[#ccc] pb-[15px] text-left mb-[10px]">
+                        <div class="w-full max-w-[25%]">${item.promo}</div>
+                        <div class="w-full max-w-[25%]">${item.price}</div>
+                       
+                <div class="w-full max-w-[25%]">${expired ? "ENDED" : `${remainingTime.days} days ${remainingTime.minutes} minutes remaining`}</div>
+                
+                <div class="w-full max-w-[25%]">
+                    <button onclick="deletePromo(${index})">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                    </button>
+                </div> 
+                </div>
+                
+                `;
+                promoListElem.innerHTML += promoHtml;
+            });
+        }
+ 
+        if(promos.length < 1) {
+            promoListElem.innerHTML = `<div class="text-center text-[30px] font-bold py-[30px]">No results to show.</div>`
+        }   
+        
+    };  
+
+    renderPromos(promos);
+
+     // Function to delete a promo at a given index with confirmation
+     const deletePromo = (index) => {
+        const userConfirmed = confirm(`Are you sure you want to delete promo ${promos[index].promo}?`);
+        
+        if (userConfirmed) {
+            promos.splice(index, 1);  // Remove one element at the given index
+            renderPromos(promos);     // Render the updated promos array
+        }
+    } 
+
+        // Function to add a new promo
+        const addPromo = (promo, price, duration) => {
+            const popupPromo = document.querySelector("#addPromo");
+
+            popupPromo.classList.remove('show'); 
+
+            promos.push({ promo, price, duration });
+            renderPromos(promos);  // Render the updated promos array
+        };
+
+        // Handle form submission
+        document.getElementById('addPromoForm').onsubmit = (event) => {
+            event.preventDefault();  // Prevent form from submitting the traditional way
+
+            const promo = event.target.promo.value;
+            const price = event.target.price.value;
+            const duration = event.target.duration.value;
+
+            addPromo(promo, price, duration);
+
+            // Clear the form fields
+            event.target.promo.value = '';
+            event.target.price.value = '';
+            event.target.duration.value = '';
+        }; 
+    </script>
 
 <script src="https://cdn.tailwindcss.com"></script>
             
-        
+         
     </body>
 </html>
